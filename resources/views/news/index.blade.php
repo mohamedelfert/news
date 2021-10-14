@@ -21,6 +21,7 @@
                             <tr>
                                 <th>Id</th>
                                 <th>Title</th>
+                                <th>Add By</th>
                                 <th>Description</th>
                                 <th>Content</th>
                                 <th>Photo</th>
@@ -32,9 +33,11 @@
                                 <tr>
                                     <td>{{$news->id}}</td>
                                     <td>{{$news->title}}</td>
+                                    <td>{{$news->getUserName()->first()->name}}</td>
                                     <td>{{$news->desc}}</td>
                                     <td>{{$news->content}}</td>
-                                    <td><img src="{{$news->photo}}"></td>
+{{--                                    <td><img src="uploads/{{$news->photo}}"></td>--}}
+                                    <td><img src="{{url('uploads/' . $news->photo)}}" style="width: 50px;height: 50px"></td>
                                     <td>
                                         {!! Form::open(['url'=>'news/'.$news->id,'method'=>'delete']) !!}
                                         {!! Form::submit('Delete',['class'=>'btn btn-danger']) !!}
