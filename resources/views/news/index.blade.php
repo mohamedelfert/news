@@ -33,13 +33,16 @@
                                 <tr>
                                     <td>{{$news->id}}</td>
                                     <td>{{$news->title}}</td>
-                                    <td>{{$news->getUserName()->first()->name}}</td>
+{{--                                    <td>{{$news->getUserName()->first()->name}}</td>--}}
+                                    <td>{{$news->getUserName->name}}</td>
                                     <td>{{$news->desc}}</td>
                                     <td>{{$news->content}}</td>
 {{--                                    <td><img src="uploads/{{$news->photo}}"></td>--}}
                                     <td><img src="{{url('uploads/' . $news->photo)}}" style="width: 50px;height: 50px"></td>
                                     <td>
-                                        {!! Form::open(['url'=>'news/'.$news->id,'method'=>'delete']) !!}
+                                        <a href="{{url('news/' . $news->id . '/edit')}}" class="btn btn-primary">Edit</a>
+                                        <a href="{{url('news/' . $news->id)}}" class="btn btn-info">Show</a>
+                                        {!! Form::open(['url'=>'news/'.$news->id,'method'=>'delete','style'=>'display:inline']) !!}
                                         {!! Form::submit('Delete',['class'=>'btn btn-danger']) !!}
                                         {!! Form::close() !!}
                                     </td>

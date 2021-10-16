@@ -28,7 +28,7 @@ class newsController extends Controller
      */
     public function create()
     {
-        $title = 'Create Or Update News';
+        $title = 'Create News';
         return view('news.create',compact('title'));
     }
 
@@ -73,6 +73,7 @@ class newsController extends Controller
                 'size'      => Storage::size($uploadFile),
             ]);
         }
+
         $newName = str_replace($tempFolder,$news->id,$news['photo']);
         Storage::rename($news['photo'],$newName);
         News::where('id',$news->id)->update(['photo' => $newName]);
@@ -89,7 +90,8 @@ class newsController extends Controller
      */
     public function show($id)
     {
-        //
+        $news = News::find($id);
+        return view('news.show',['news' => $news,'title' => $news->title]);
     }
 
     /**
@@ -100,7 +102,8 @@ class newsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $news = News::find($id);
+        return view('news.edit',['title' => 'Edit Or Update News','news' => $news]);
     }
 
     /**
@@ -112,7 +115,16 @@ class newsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if ($request->has('delete_photo' and $request->has('file_id'))){
+            foreach ($request->input('file_id') as $fid){
+                $file = Files::find($fid);
+                Storage::delete('images/' . $file->file);
+            }
+            session()->flash('success','Photo Has Been Deleted Successfully');
+            return redirect('news/'.$id.'/edit');
+        }else{
+            return 'ok';
+        }
     }
 
     /**

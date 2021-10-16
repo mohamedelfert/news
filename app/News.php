@@ -13,4 +13,8 @@ class News extends Model
     public function getUserName(){
         return $this->hasOne(User::class,'id','user_id');
     }
+
+    public function files(){
+        return $this->hasMany(Files::class,'news_id','id');
+    }
 }

@@ -20,33 +20,47 @@
                         <a class="btn bg-primary" style="margin-left: 50px" href="{{url('news')}}">Back</a>
                     </div>
 
-                    {!! Form::open(['url' => 'news','id' => 'news','files' => true]) !!}
+                    {!! Form::open(['url' => 'news/' . $news->id,'files' => true,'method' => 'put']) !!}
                     <div class="mb-3">
                         {!! Form::label('exampleFormControlInput1','News Title',['class'=>'form-label']) !!}
-                        {!! Form::text('title',old('title'),['class'=>'form-control','id'=>'exampleFormControlInput1','placeholder'=>'News Title']) !!}
+                        {!! Form::text('title',$news->title,['class'=>'form-control','id'=>'exampleFormControlInput1','placeholder'=>'News Title']) !!}
                     </div>
                     <div class="mb-3">
                         {!! Form::label('exampleFormControlInput2','News Description',['class'=>'form-label']) !!}
-                        {!! Form::text('desc',old('desc'),['class'=>'form-control','id'=>'exampleFormControlInput2','placeholder'=>'News Description']) !!}
+                        {!! Form::text('desc',$news->desc,['class'=>'form-control','id'=>'exampleFormControlInput2','placeholder'=>'News Description']) !!}
                     </div>
                     <div class="mb-3">
                         {!! Form::label('exampleFormControlInput3','Add By',['class'=>'form-label']) !!}
-                        {!! Form::number('user_id',old('user_id'),['class'=>'form-control','id'=>'exampleFormControlInput3']) !!}
+                        {!! Form::number('user_id',$news->user_id,['class'=>'form-control','id'=>'exampleFormControlInput3']) !!}
                     </div>
                     <div class="mb-3">
                         {!! Form::label('exampleFormControlInput4','News Content',['class'=>'form-label']) !!}
-                        {!! Form::textarea('content',old('content'),['class'=>'form-control','id'=>'exampleFormControlInput4','placeholder'=>'News Content']) !!}
+                        {!! Form::textarea('content',$news->content,['class'=>'form-control','id'=>'exampleFormControlInput4','placeholder'=>'News Content']) !!}
                     </div>
                     <div class="mb-3">
                         {!! Form::label('exampleFormControlInput5','Photo',['class'=>'form-label']) !!}
                         {!! Form::file('photo',['class'=>'form-control','id'=>'exampleFormControlInput5']) !!}
+                        <label>Main Photo : </label>
+                        <img src="{{url('uploads/' . $news->photo)}}" style="width: 200px;height: 150px;margin: 0 50%;padding: 5px">
                     </div>
                     <div class="mb-3">
                         {!! Form::label('exampleFormControlInput5','files',['class'=>'form-label']) !!}
                         {!! Form::file('files[]',['class'=>'form-control','id'=>'exampleFormControlInput5','multiple'=>'yes']) !!}
+                        <h5>News Photo : </h5>
+                        @foreach($news->files()->get() as $file)
+                            <div class="col-md-4">
+                                <img src="{{url('uploads/' . $file->file)}}" style="width: 100px;height: 100px;margin: 10px">
+                                <small>{{$file->file_name}}</small>
+                                <input type="checkbox" name="file_id[]" value="{{$file->id}}">
+                            </div>
+                        @endforeach
                     </div>
+                    <div class="clearfix"></div>
+                    <hr>
+                    {{Form::submit('Delete Photos',['class'=>'btn btn-danger mb-3','id'=>'delete','name' => 'delete_photo'])}}
+                    <hr>
                     <div class="mb-3" style="margin-top: 5px">
-                        {!! Form::submit('Add New',['class'=>'btn btn-success mb-3','id'=>'add_news']) !!}
+                        {!! Form::submit('Update',['class'=>'btn btn-success mb-3','id'=>'update']) !!}
                     </div>
                     {!! Form::close() !!}
 
