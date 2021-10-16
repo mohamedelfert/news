@@ -115,15 +115,56 @@ class newsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if ($request->has('delete_photo' and $request->has('file_id'))){
+        if ($request->has('delete_photo') and $request->has('file_id')){
             foreach ($request->input('file_id') as $fid){
                 $file = Files::find($fid);
-                Storage::delete('images/' . $file->file);
+                Storage::delete($file->file);
+                $file->delete();
             }
             session()->flash('success','Photo Has Been Deleted Successfully');
             return redirect('news/'.$id.'/edit');
         }else{
-            return 'ok';
+            $rules = [
+                'title'     => 'required',
+                'desc'      => 'required',
+                'content'   => 'required',
+                'photo'     => 'image|mimes:jpg,jpeg,png',
+                'files.*'   => 'image|mimes:jpg,jpeg,png',
+                'user_id'   => 'required',
+            ];
+            $niceName = [
+                'title'   => 'Title',
+                'desc'    => 'Description',
+                'content' => 'Content',
+                'photo'   => 'Photo',
+                'user_id' => 'User Id',
+            ];
+            $data = $this->validate($request,$rules,[],$niceName);
+            $data['user_id'] = auth()->user()->id;
+            $news = News::find($id);
+            $data = $request->except(['files','_method','_token']);
+            if ($request->hasFile('photo')){
+                Storage::delete($news->photo);
+                $data['photo']   = $request->photo->store('images/' . $id);
+            }
+
+            if ($request->hasFile('files')){
+                foreach ($request->file('files') as $file){
+                    $uploadFile = $file->store('images/'.$news->id);
+                    Files::create([
+                        'user_id'   => auth()->user()->id,
+                        'news_id'   => $news->id,
+                        'path'      => 'images/'.$news->id,
+                        'file'      => $uploadFile,
+                        'file_name' => $file->getClientOriginalName(),
+                        'size'      => Storage::size($uploadFile),
+                    ]);
+                }
+            }
+
+            News::where('id',$news->id)->update($data);
+            session()->flash('success','The News Has Been Saved Successfully');
+            return redirect('news');
         }
     }
 

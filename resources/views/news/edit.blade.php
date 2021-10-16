@@ -46,18 +46,22 @@
                     <div class="mb-3">
                         {!! Form::label('exampleFormControlInput5','files',['class'=>'form-label']) !!}
                         {!! Form::file('files[]',['class'=>'form-control','id'=>'exampleFormControlInput5','multiple'=>'yes']) !!}
-                        <h5>News Photo : </h5>
-                        @foreach($news->files()->get() as $file)
-                            <div class="col-md-4">
-                                <img src="{{url('uploads/' . $file->file)}}" style="width: 100px;height: 100px;margin: 10px">
-                                <small>{{$file->file_name}}</small>
-                                <input type="checkbox" name="file_id[]" value="{{$file->id}}">
-                            </div>
-                        @endforeach
+                        @if($news->files()->count() > 0)
+                            <h5>News Photo : </h5>
+                            @foreach($news->files()->get() as $file)
+                                <div class="col-md-4">
+                                    <img src="{{url('uploads/' . $file->file)}}" style="width: 100px;height: 100px;margin: 10px">
+                                    <small>{{$file->file_name}}</small>
+                                    <input type="checkbox" name="file_id[]" value="{{$file->id}}">
+                                </div>
+                            @endforeach
+                        @endif
                     </div>
                     <div class="clearfix"></div>
-                    <hr>
-                    {{Form::submit('Delete Photos',['class'=>'btn btn-danger mb-3','id'=>'delete','name' => 'delete_photo'])}}
+                    @if($news->files()->count() > 0)
+                        <hr>
+                        {{Form::submit('Delete Photos',['class'=>'btn btn-danger mb-3','id'=>'delete','name' => 'delete_photo'])}}
+                    @endif
                     <hr>
                     <div class="mb-3" style="margin-top: 5px">
                         {!! Form::submit('Update',['class'=>'btn btn-success mb-3','id'=>'update']) !!}
